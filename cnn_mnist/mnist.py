@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torchvision
+import matplotlib.pyplot as plt
 
 # Number of epochs
 n_epochs = 1
@@ -87,7 +88,7 @@ class Net(nn.Module):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
 
-        # ????
+        # ???? Reshape???
         x = x.view(-1, 320)
 
 
@@ -176,8 +177,6 @@ def test():
 ## Iterate ##
 #############
 
-
-# Test set: Avg. loss: 0.0925, Accuracy: 9721/10000 (97%)
 test()
 for epoch in range(1, n_epochs + 1):
   train(epoch)
@@ -187,16 +186,12 @@ for epoch in range(1, n_epochs + 1):
 ## Plot training ##
 ###################
 
-import matplotlib.pyplot as plt
-
-fig = plt.figure()
 plt.plot(train_counter, train_losses, color='blue')
 plt.scatter(test_counter, test_losses, color='red')
 plt.legend(['Train Loss', 'Test Loss'], loc='upper right')
 plt.xlabel('number of training examples seen')
 plt.ylabel('negative log likelihood loss')
-fig
-
+plt.show()
 
 ###################
 ## Plot examples ##
@@ -210,9 +205,7 @@ for i in range(6):
   plt.subplot(2,3,i+1)
   plt.tight_layout()
   plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
-  plt.title("Prediction: {}".format(
-    output.data.max(1, keepdim=True)[1][i].item()))
+  plt.title("Prediction: {}".format(output.data.max(1, keepdim=True)[1][i].item()))
   plt.xticks([])
   plt.yticks([])
-
 plt.show()
